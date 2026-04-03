@@ -26,8 +26,9 @@ COMMANDS="addlib build clean list logs restart start stop"
 cd $HOME
 rm -rf Arduino bin Repos
 mkdir -p $REPO_DEST
-git clone $REPO $REPO_DEST/UNO-Q
-git clone $DEV_REPO $REPO_DEST/UNO-Q-Development-System
+cd $REPO_DEST
+git clone $REPO
+git clone $DEV_REPO
 
 cp -rp $REPO_DEST/UNO-Q/Arduino $HOME
 cp -rp $REPO_DEST/UNO-Q-Development-System/bin $HOME
