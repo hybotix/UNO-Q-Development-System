@@ -2,12 +2,14 @@
   "name": "hybx-dev",
   "displayName": "HybX Development System",
   "description": "Hybrid RobotiX — HybX Development System integration for VSCode",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "hybridrobotix",
   "engines": {
     "vscode": "^1.110.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "repository": {
@@ -36,20 +38,55 @@
           "type": "string",
           "default": "",
           "description": "Path to SSH private key (leave empty to use default)"
+        },
+        "hybxDev.sshPath": {
+          "type": "string",
+          "default": "/usr/bin/ssh",
+          "description": "Full path to the ssh binary (default: /usr/bin/ssh)"
         }
       }
     },
     "commands": [
-      { "command": "hybxDev.connect",  "title": "HybX: Connect" },
-      { "command": "hybxDev.start",    "title": "HybX: Start App" },
-      { "command": "hybxDev.stop",     "title": "HybX: Stop App" },
-      { "command": "hybxDev.restart",  "title": "HybX: Restart App" },
-      { "command": "hybxDev.logs",     "title": "HybX: Show Logs" },
-      { "command": "hybxDev.build",    "title": "HybX: Build Sketch" },
-      { "command": "hybxDev.addlib",   "title": "HybX: Add Library" },
-      { "command": "hybxDev.listApps", "title": "HybX: List Apps" },
-      { "command": "hybxDev.clean",    "title": "HybX: Clean" },
-      { "command": "hybxDev.newrepo",  "title": "HybX: Run newrepo (Bootstrap)" }
+      {
+        "command": "hybxDev.connect",
+        "title": "HybX: Connect"
+      },
+      {
+        "command": "hybxDev.start",
+        "title": "HybX: Start App"
+      },
+      {
+        "command": "hybxDev.stop",
+        "title": "HybX: Stop App"
+      },
+      {
+        "command": "hybxDev.restart",
+        "title": "HybX: Restart App"
+      },
+      {
+        "command": "hybxDev.logs",
+        "title": "HybX: Show Logs"
+      },
+      {
+        "command": "hybxDev.build",
+        "title": "HybX: Build Sketch"
+      },
+      {
+        "command": "hybxDev.addlib",
+        "title": "HybX: Add Library"
+      },
+      {
+        "command": "hybxDev.listApps",
+        "title": "HybX: List Apps"
+      },
+      {
+        "command": "hybxDev.clean",
+        "title": "HybX: Clean"
+      },
+      {
+        "command": "hybxDev.newrepo",
+        "title": "HybX: Run newrepo (Bootstrap)"
+      }
     ]
   },
   "scripts": {

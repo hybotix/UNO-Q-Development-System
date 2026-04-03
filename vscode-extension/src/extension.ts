@@ -9,6 +9,7 @@
  *   hybxDev.sshHost    — SSH connection string, default: arduino@unoq.local
  *   hybxDev.appsPath   — Apps directory on board, default: ~/Arduino
  *   hybxDev.sshKeyPath — Path to SSH private key (optional)
+ *   hybxDev.sshPath    — Full path to ssh binary, default: /usr/bin/ssh
  */
 
 import * as vscode from 'vscode';
@@ -59,6 +60,7 @@ function cfg(): vscode.WorkspaceConfiguration {
 function sshHost(): string { return cfg().get<string>('sshHost', 'arduino@unoq.local'); }
 function appsPath(): string { return cfg().get<string>('appsPath', '~/Arduino'); }
 function sshKeyPath(): string { return cfg().get<string>('sshKeyPath', ''); }
+function sshBinary(): string { return cfg().get<string>('sshPath', '/usr/bin/ssh'); }
 
 function sshArgs(): string[] {
     const args = ['-o', 'StrictHostKeyChecking=no', '-o', 'ConnectTimeout=10'];
@@ -72,7 +74,7 @@ function sshRun(remoteCmd: string, label: string): Promise<void> {
         outputChannel.show(true);
         outputChannel.appendLine(`\n─── ${label} ───────────────────────────`);
         const args = [...sshArgs(), sshHost(), remoteCmd];
-        const proc = spawn('ssh', args);
+        const proc = spawn(sshBinary(), args);
         proc.stdout.on('data', (d: Buffer) => outputChannel.append(d.toString()));
         proc.stderr.on('data', (d: Buffer) => outputChannel.append(d.toString()));
         proc.on('close', (code) => {
@@ -87,7 +89,7 @@ function sshStream(remoteCmd: string, label: string): ChildProcess {
     outputChannel.show(true);
     outputChannel.appendLine(`\n─── ${label} ───────────────────────────`);
     const args = [...sshArgs(), sshHost(), remoteCmd];
-    const proc = spawn('ssh', args);
+    const proc = spawn(sshBinary(), args);
     proc.stdout.on('data', (d: Buffer) => outputChannel.append(d.toString()));
     proc.stderr.on('data', (d: Buffer) => outputChannel.append(d.toString()));
     proc.on('close', (code) => { outputChannel.appendLine(`\n[logs ended, exit ${code}]`); });
@@ -113,8 +115,9 @@ function updateStatusBar() {
 
 async function pickApp(): Promise<string | undefined> {
     return new Promise((resolve) => {
+        const ssh = sshBinary();
         const args = [...sshArgs(), sshHost(), `ls -1 ${appsPath()} 2>/dev/null`];
-        exec(`ssh ${args.join(' ')}`, (err, stdout) => {
+        exec(`"${ssh}" ${args.join(' ')}`, (err, stdout) => {
             let items: string[] = [];
             if (!err && stdout.trim()) { items = stdout.trim().split('\n').filter(Boolean); }
             items.push('$(edit) Enter app name manually...');
@@ -132,12 +135,13 @@ async function pickApp(): Promise<string | undefined> {
 async function cmdConnect() {
     outputChannel.show(true);
     outputChannel.appendLine(`\n─── connect ────────────────────────────`);
-    outputChannel.appendLine(`Testing SSH connection to ${sshHost()} ...`);
+    outputChannel.appendLine(`SSH binary: ${sshBinary()}`);
+    outputChannel.appendLine(`Testing connection to ${sshHost()} ...`);
     try {
         await sshRun('echo "HybX connected — $(uname -r)"', 'connect');
         vscode.window.showInformationMessage(`✓ Connected to ${sshHost()}`);
     } catch {
-        vscode.window.showErrorMessage(`Cannot connect to ${sshHost()}. Check settings and network.`);
+        vscode.window.showErrorMessage(`Cannot connect to ${sshHost()}. Check Settings → hybxDev.sshHost and that the board is on the network.`);
     }
 }
 
