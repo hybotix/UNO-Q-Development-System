@@ -104,7 +104,7 @@ def main():
     clear_cache(app_path)
 
     # Install newrepo as a bin command from the repo
-    newrepo_src = os.path.expanduser("~/Repos/GitHub/hybotix/UNO-Q/scripts/newrepo.bash")
+    newrepo_src = os.path.expanduser("~/Repos/GitHub/hybotix/UNO-Q-Development-System/scripts/newrepo.bash")
     newrepo_dst = os.path.expanduser("~/bin/newrepo")
     if os.path.exists(newrepo_src):
         import shutil

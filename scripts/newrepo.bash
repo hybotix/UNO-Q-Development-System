@@ -49,6 +49,7 @@ done
 cd $HOME/bin
 for cmd in $COMMANDS; do
     latest=$(ls ${cmd}-v*.py 2>/dev/null | sort -V | tail -1)
+
     if [ -n "$latest" ]; then
         ln -sf $HOME/bin/$latest $HOME/bin/$cmd
         chmod +x $HOME/bin/$cmd
